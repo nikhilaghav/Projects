@@ -12,18 +12,24 @@ from email.message import EmailMessage
 def send_mail(sender, app_password, receiver, subject, body):
     # Step 1 : Create Email object
     msg = EmailMessage()
+    
     # Step 2 : Set mail headers
     msg["From"] = sender
     msg["To"] = receiver
     msg["Subject"] = subject
+    
     # Step 3 : Add mail body
     msg.set_content(body)
+    
     # Step 4 : Create SMTP SSL connection manually
     smtp = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+    
     # Step 5 : Login using Gmail + App password
     smtp.login(sender, app_password)
+    
     # Step 6 : Send the email
     smtp.send_message(msg)
+    
     # Step 7 : Close connection manually
     smtp.quit()
 # -------------------------------------------------
