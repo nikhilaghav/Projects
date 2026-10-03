@@ -1,0 +1,260 @@
+
+# ==========================================
+# Program : Platform Surveillance System
+# Author  : Nikhil Aghav
+# Purpose : Monitor system information and
+#           maintain records in log files
+# ==========================================
+
+import psutil
+import sys
+import os
+import time
+import schedule
+
+
+# -------------------------------------------------
+# Function    : ProcessScan
+# Description : Fetches information about running
+#               processes in the system
+# -------------------------------------------------
+def ProcessScan():
+
+        # Step 1 : Create an empty list to store process information
+        listprocess = []
+    
+        # Step 2 : Iterate through all running processes
+        for proc in psutil.process_iter():
+
+        # Step 3 : Fetch basic information about each process
+        info = proc.as_dict(attrs=["pid", "name", "username", "status"])
+
+        # Step 4 : Fetch CPU usage of the process
+        info["cpu_percent"] = proc.cpu_percent(None)
+
+        # Step 5 : Fetch RAM usage of the process
+        info["memory_percent"] = proc.memory_percent()
+
+        # Step 6 : Add process information into the list
+        listprocess.append(info)
+
+        # Step 7 : Return the complete process information
+        return listprocess
+
+
+# -------------------------------------------------
+# Function : PlatformSurvillance
+# Description : Collects system information and
+#               creates a log file
+# -------------------------------------------------
+def PlatformSurvillance(FolderName):
+
+    # Step 1 : Create a border for the log file
+    Border = "-" * 50
+
+    Ret = False
+
+    # Step 2 : Check whether the folder exists
+    Ret = os.path.exists(FolderName)
+
+    if(Ret == True):
+
+        # Step 3 : Check whether the existing path is a directory
+        Ret = os.path.isdir(FolderName)
+
+        if(Ret == False):
+            print("Unable to proceed as directory name is existing but it is not a directory")
+            return
+
+    else:
+
+        # Step 4 : Create the directory if it does not exist
+        os.mkdir(FolderName)
+        print("Directory for the logfile gets created successfully")
+
+    # Step 5 : Generate timestamp for the log file
+    timestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
+
+    # Step 6 : Create complete path for the log file
+    FileName = os.path.join(FolderName, "Marvellous_%s.log" % timestamp)
+
+    # Step 7 : Open the log file in write mode
+    fobj = open(FileName, "w")
+
+    print(f"Log file gets successfully created with name {FileName}")
+
+    # Step 8 : Write log file header
+    fobj.write(Border + "\n")
+    fobj.write("---- Marvellous Platform Survillance System ----\n")
+    fobj.write("Log file gets created at : " + timestamp + "\n")
+    fobj.write(Border + "\n\n")
+
+    # Step 9 : Write system report heading
+    fobj.write("---------------- System Report -----------------\n")
+
+    # -------------------------------------------------
+    # CPU Information
+    # -------------------------------------------------
+
+    # Step 10 : Fetch number of CPU cores
+    fobj.write("Number of active CPU cores : %s\n" % psutil.cpu_count())
+
+    # Step 11 : Fetch CPU usage
+    fobj.write("CPU Usage : %s %%\n" % psutil.cpu_percent())
+
+    fobj.write(Border + "\n")
+
+    # -------------------------------------------------
+    # RAM Information
+    # -------------------------------------------------
+
+    # Step 12 : Fetch RAM information
+    memory = psutil.virtual_memory()
+
+    # Step 13 : Write RAM usage percentage
+    fobj.write("RAM Usage : %s %%\n" % memory.percent)
+
+    # Step 14 : Write total available RAM
+    fobj.write("Total RAM available : %s\n" % memory.total)
+
+    fobj.write(Border + "\n")
+
+    # -------------------------------------------------
+    # Network Information
+    # -------------------------------------------------
+
+    # Step 15 : Fetch network statistics
+    netobj = psutil.net_io_counters()
+
+    fobj.write("Network Usage Report\n")
+
+    # Step 16 : Write total data sent
+    fobj.write("Sent : %.2f MB\n" %
+               (netobj.bytes_sent / (1024 * 1024)))
+
+    # Step 17 : Write total data received
+    fobj.write("Receive : %.2f MB\n" %
+               (netobj.bytes_recv / (1024 * 1024)))
+
+    # -------------------------------------------------
+    # Process Information
+    # -------------------------------------------------
+
+    # Step 18 : Fetch information about running processes
+    Data = ProcessScan()
+
+    # Step 19 : Write information of every process
+    for info in Data:
+
+        fobj.write("PID : %s\n" % info.get("pid"))
+        fobj.write("Name : %s\n" % info.get("name"))
+        fobj.write("User Name : %s\n" % info.get("username"))
+        fobj.write("Status : %s\n" % info.get("status"))
+        fobj.write("CPU usage : %.2f\n" % info.get("cpu_percent"))
+        fobj.write("RAM usage : %.2f\n" % info.get("memory_percent"))
+
+        fobj.write(Border + "\n")
+
+    # Step 20 : Write end of log file
+    fobj.write(Border + "\n")
+    fobj.write("--------------- End of Log File ----------------\n")
+    fobj.write(Border + "\n")
+
+    # Step 21 : Close the log file
+    fobj.close()
+
+
+# -------------------------------------------------
+# Function : main
+# Description : Driver function of the program
+# -------------------------------------------------
+def main():
+
+    # Step 1 : Create a border for the terminal output
+    Border = "-" * 50
+
+    print(Border)
+    print("---- Marvellous Platform Survillance System ----")
+    print(Border)
+
+    # -------------------------------------------------
+    # Help and Usage Handling
+    # -------------------------------------------------
+
+    # Step 2 : Check whether exactly one argument is provided
+    if(len(sys.argv) == 2):
+
+        # Step 3 : Handle --h / --H option
+        if(sys.argv[1] == "--h" or sys.argv[1] == "--H"):
+
+            print("This automation script is used to perform ")
+            print("1 : It fetch the information of running processess")
+            print("2 : It fetch information about the primary storage as RAM")
+            print("3 : It fetch information about the secondary storage as HDD")
+            print("4 : It fetch the information about the microprocessor")
+            print("5 : It gets auto scheduled periodically")
+            print("6 : It maintains all records into log file")
+            print("7 : It sends the log files through mail periodically")
+
+        # Step 4 : Handle --u / --U option
+        elif(sys.argv[1] == "--u" or sys.argv[1] == "--U"):
+
+            print("Use the automation script as : ")
+            print(f"python {sys.argv[0]} Time_Interval Folder_Name")
+            print("Time_Interval : Time in minutes for periodic execution")
+            print("Folder_Name : Name of folder for the log file creation")
+
+        # Step 5 : Handle invalid option
+        else:
+
+            print("Unable to proceed as there is no matching argument")
+            print("Please use --h or --u flag for getting more details")
+
+    # -------------------------------------------------
+    # Actual Project Code
+    # -------------------------------------------------
+
+    # Step 6 : Check whether time interval and folder name are provided
+    elif(len(sys.argv) == 3):
+
+        print("Schedular started successfully")
+        print("Press Ctrl + C to abort the automation script")
+
+        # Step 7 : Schedule PlatformSurvillance function
+        schedule.every(int(sys.argv[1])).minutes.do(
+            PlatformSurvillance,
+            sys.argv[2]
+        )
+
+        # Step 8 : Continuously check for scheduled tasks
+        while True:
+
+            # Step 9 : Execute pending scheduled tasks
+            schedule.run_pending()
+
+            # Step 10 : Wait for one second before checking again
+            time.sleep(1)
+
+    # -------------------------------------------------
+    # Invalid Arguments
+    # -------------------------------------------------
+
+    else:
+
+        # Step 11 : Handle invalid number of arguments
+        print("Invalid number of arguments")
+        print("Unable to proceed as arguments are not matching")
+        print("Please use --h or --u flag for getting more details")
+
+    print(Border)
+    print("--- Thank you for using our automation System ---")
+    print(Border)
+
+
+# -------------------------------------------------
+# Program Entry Point
+# -------------------------------------------------
+if __name__ == "__main__":
+
+    # Step 1 : Call main function
+    main()
