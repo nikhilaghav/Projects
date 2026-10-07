@@ -31,6 +31,9 @@ The webcam continuously captures images, preprocesses them according to the Mobi
   OpenCV
     
   NumPy
-TensorFlow / Keras
-MobileNetV2
-ImageNet
+
+  TensorFlow / Keras
+
+  MobileNetV2
+  
+  ImageNet
