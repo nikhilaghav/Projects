@@ -1,0 +1,277 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.preprocessing import StandardScaler
+
+Border = "-"*40
+
+########################################
+# Step 1 : Load the dataset
+########################################
+
+print(Border)
+print("Step 1 : Load the dataset")
+print(Border)
+
+DataPath = "WinePredictor.csv"
+
+df = pd.read_csv(DataPath)
+
+print("Dataset loaded successfully")
+print("Initial entries from dataset are : ")
+print(df.head())
+
+########################################
+# Step 2 : Data Analysis (EDA)
+########################################
+
+print(Border)
+print("Step 2 : Data Analysis (EDA)")
+print(Border)
+
+print("Shape of dataset : ", df.shape)
+
+print("Column names : ", list(df.columns))
+
+print("Missing values per column : ")
+print(df.isnull().sum())
+
+print("Class distribution : ")
+print(df["Class"].value_counts())
+
+print("Statistical report of dataset : ")
+print(df.describe())
+
+########################################
+# Step 3 : Clean the dataset
+########################################
+
+print(Border)
+print("Step 3 : Clean the dataset")
+print(Border)
+
+df.dropna(inplace=True)
+
+print("Dataset cleaned successfully")
+
+print("Shape after cleaning : ", df.shape)
+
+########################################
+# Step 4 : Decide Independent & Dependent variables
+########################################
+
+print(Border)
+print("Step 4 : Decide Independent & Dependent variables")
+print(Border)
+
+# X : Independent Variables / Features
+# Y : Dependent Variable / Label
+
+X = df.drop(columns=["Class"])
+Y = df["Class"]
+
+print("X Shape : ", X.shape)
+print("Y Shape : ", Y.shape)
+
+print("Input columns : ", X.columns.tolist())
+print("Output column : Class")
+
+########################################
+# Step 5 : Split the dataset for training and testing
+########################################
+
+print(Border)
+print("Step 5 : Split the dataset for training and testing")
+print(Border)
+
+X_train, X_test, Y_train, Y_test = train_test_split(
+    X,
+    Y,
+    test_size=0.2,
+    random_state=42,
+    stratify=Y
+)
+
+print("Dataset splitting activity done")
+
+print("X : ", X.shape)
+print("Y : ", Y.shape)
+
+print("X_train : ", X_train.shape)
+print("X_test : ", X_test.shape)
+
+print("Y_train : ", Y_train.shape)
+print("Y_test : ", Y_test.shape)
+
+########################################
+# Step 6 : Feature Scaling
+########################################
+
+print(Border)
+print("Step 6 : Feature Scaling")
+print(Border)
+
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+print("Feature scaling done successfully")
+
+########################################
+# Step 7 : Hyperparameter Tuning
+########################################
+
+print(Border)
+print("Step 7 : Hyperparameter Tuning")
+print(Border)
+
+accuracy_scores = []
+
+K_values = range(1, 21)
+
+for k in K_values:
+
+    model = KNeighborsClassifier(n_neighbors=k)
+
+    model.fit(X_train_scaled, Y_train)
+
+    Y_pred = model.predict(X_test_scaled)
+
+    accuracy = accuracy_score(Y_test, Y_pred)
+
+    accuracy_scores.append(accuracy)
+
+print("Accuracy report : ")
+
+for k, accuracy in zip(K_values, accuracy_scores):
+    print("K =", k, "Accuracy =", accuracy)
+
+########################################
+# Step 8 : Find the best value of K
+########################################
+
+print(Border)
+print("Step 8 : Find the best value of K")
+print(Border)
+
+BestIndex = accuracy_scores.index(max(accuracy_scores))
+
+BestK = list(K_values)[BestIndex]
+
+BestAccuracy = accuracy_scores[BestIndex]
+
+print("Best value of K : ", BestK)
+print("Best accuracy : ", BestAccuracy * 100)
+
+########################################
+# Step 9 : Build the final model
+########################################
+
+print(Border)
+print("Step 9 : Build the final model")
+print(Border)
+
+model = KNeighborsClassifier(n_neighbors=BestK)
+
+print("KNN model created successfully")
+
+########################################
+# Step 10 : Train the final model
+########################################
+
+print(Border)
+print("Step 10 : Train the final model")
+print(Border)
+
+model.fit(X_train_scaled, Y_train)
+
+print("Model trained successfully")
+
+########################################
+# Step 11 : Test the final model
+########################################
+
+print(Border)
+print("Step 11 : Test the final model")
+print(Border)
+
+Y_pred = model.predict(X_test_scaled)
+
+print("Model testing done")
+
+print("Expected answers : ")
+print(Y_test.values)
+
+print("Predicted answers : ")
+print(Y_pred)
+
+########################################
+# Step 12 : Evaluate the model performance
+########################################
+
+print(Border)
+print("Step 12 : Evaluate the model performance")
+print(Border)
+
+accuracy = accuracy_score(Y_test, Y_pred)
+
+print("Accuracy of model is : ", accuracy * 100)
+
+print("Confusion Matrix : ")
+
+cm = confusion_matrix(Y_test, Y_pred)
+
+print(cm)
+
+print("Classification Report : ")
+
+print(classification_report(Y_test, Y_pred))
+
+########################################
+# Step 13 : Visualisation of K values
+########################################
+
+print(Border)
+print("Step 13 : Visualisation of K values")
+print(Border)
+
+plt.figure(figsize=(8, 5))
+
+plt.plot(
+    K_values,
+    accuracy_scores,
+    marker="o"
+)
+
+plt.title("K Values vs Accuracy")
+
+plt.xlabel("Value of K")
+
+plt.ylabel("Accuracy")
+
+plt.grid(True)
+
+plt.xticks(list(K_values))
+
+plt.show()
+
+
+########################################
+# Main Function
+########################################
+
+def main():
+
+    MarvellousClassifier("WinePredictor.csv")
+
+
+########################################
+# Starter of the program
+########################################
+
+if __name__ == "__main__":
+    main()
