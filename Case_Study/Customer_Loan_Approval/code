@@ -1,0 +1,143 @@
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score,confusion_matrix
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+
+from sklearn.ensemble import VotingClassifier
+
+#---------------------------------
+#Step1:Load the dataset
+#---------------------------------
+
+df = pd.read_csv("Customer_Loan_Approval.csv")
+
+print("shape of datset:",df.shape)
+
+print("First few records:")
+print(df.head())
+
+#---------------------------------
+#Step2:check for missing values
+#---------------------------------
+print("Missing values:")
+print(df.isnull().sum())
+
+#---------------------------------
+#Step3:separate features and lables
+#---------------------------------
+
+X = df.drop("LoanApproved",axis=1)
+Y = df["LoanApproved"]
+
+print("X shape:",X.shape)
+print("Y shape:",Y.shape)
+
+#---------------------------------
+#Step3:split datstet
+#---------------------------------
+
+X_train,X_test,Y_train,Y_test = train_test_split(X,Y,test_size=0.2,random_state=42)
+
+#---------------------------------
+#Step4:scaling the features
+#---------------------------------
+
+scalar = StandardScaler()
+
+X_train = scalar.fit_transform(X_train)
+X_test = scalar.transform(X_test)
+
+#---------------------------------
+#Step5.1:create the individual models
+#---------------------------------
+
+model_log = LogisticRegression(max_iter=1000)
+
+model_det = DecisionTreeClassifier(random_state=42)
+
+model_knn = KNeighborsClassifier(n_neighbors=5)
+
+#---------------------------------
+#Step6:Train individual models
+#---------------------------------
+
+model_log = model_log.fit(X_train,Y_train)
+model_det = model_det.fit(X_train,Y_train)
+model_knn = model_knn.fit(X_train,Y_train)
+
+#---------------------------------
+#step7: Test the models
+#---------------------------------
+
+Y_pred_log = model_log.predict(X_test)
+Y_pred_det = model_det.predict(X_test)
+Y_pred_knn = model_knn.predict(X_test)
+
+#---------------------------------
+#step8:Evaluate the models
+#---------------------------------
+
+print("Accuracy of Logistic regression model:",accuracy_score(Y_test,Y_pred_log))
+print("Accuracy of decision tree model:",accuracy_score(Y_test,Y_pred_det))
+print("Accuracy of KNN model:",accuracy_score(Y_test,Y_pred_knn))
+
+#---------------------------------
+#step9: create the hard voting classifier
+#---------------------------------
+
+model_voting = VotingClassifier(estimators=[
+    ('logistic',model_log),
+    ('decision_tree',model_det),
+    ('knn',model_knn)
+    ], voting='hard') 
+
+#---------------------------------
+#Step10:Train the voting model 
+#---------------------------------
+
+model_voting = model_voting.fit(X_train,Y_train)
+
+#---------------------------------
+#step11: Test the model
+#---------------------------------
+
+Y_pred = model_voting.predict(X_test)
+
+#---------------------------------
+#step12:Evaluate the model
+#---------------------------------
+
+print("Accuracy of hard voting classifier is :",accuracy_score(Y_test,Y_pred))
+
+#---------------------------------
+#step13: create the soft voting classifier
+#---------------------------------
+
+model_voting = VotingClassifier(estimators=[
+    ('logistic',model_log),
+    ('decision_tree',model_det),
+    ('knn',model_knn)
+    ], voting='soft') 
+
+#---------------------------------
+#Step10:Train the voting model 
+#---------------------------------
+
+model_voting = model_voting.fit(X_train,Y_train)
+
+#---------------------------------
+#step11: Test the model
+#---------------------------------
+
+Y_pred = model_voting.predict(X_test)
+
+#---------------------------------
+#step12:Evaluate the model
+#---------------------------------
+
+print("Accuracy of soft voting classifier is :",accuracy_score(Y_test,Y_pred))
