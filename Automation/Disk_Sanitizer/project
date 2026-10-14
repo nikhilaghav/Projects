@@ -141,8 +141,7 @@ def DeleteDuplicate(DirectoryName):
     msg["Subject"] = "Test mail from python script"
 
     # Step 3 : Get Gmail App Password
-    # Description : Retrieves the password securely
-    #              from an environment variable
+    # Description : Retrieves the password securely from an environment variable
     app_pwd = os.getenv("GMAIL_APP_PASSWORD")
 
     if not app_pwd:
