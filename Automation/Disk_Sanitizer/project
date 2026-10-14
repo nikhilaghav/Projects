@@ -4,9 +4,12 @@
 # Purpose : Find and delete duplicate files 
 # ==========================================
 
-import sys
 import os
 import hashlib
+import schedule
+import time
+import smtplib
+from email.message import EmailMessage
 
 # ------------------------------------------------- 
 # Function : CalculateChecksum 
@@ -35,6 +38,7 @@ def CalculateChecksum(FileName):
 
 def FindDuplicate(DirectoryName):
     Ret = False
+    TotalFiles = 0
 
     Ret = os.path.exists(DirectoryName)
 
@@ -52,6 +56,8 @@ def FindDuplicate(DirectoryName):
 
     for FolderName, SubFolder, FileName in os.walk(DirectoryName):
         for fname in FileName:
+            TotalFiles = TotalFiles + 1
+
             fname = os.path.join(FolderName,fname)
 
             Checksum = CalculateChecksum(fname)
@@ -61,36 +67,128 @@ def FindDuplicate(DirectoryName):
             else:
                 Duplicate[Checksum] = [fname]
 
-    return Duplicate
+    return Duplicate, TotalFiles
 
 # -------------------------------------------------
-# Function : DeleteDuplicate # Description : Deletes duplicate files from directory 
+# Function : DeleteDuplicate 
+# Description : Deletes duplicate files from directory 
 # -------------------------------------------------
 
 def DeleteDuplicate(DirectoryName):
-    MyDict = FindDuplicate(DirectoryName)
+    Border = "-"*40
+   
+    start_time = time.perf_counter()
+
+    timestamp = time.ctime()
+    
+    LogFileName = "Marvellous%s.log"%(timestamp)        
+    LogFileName = LogFileName.replace(" ","_")
+    LogFileName = LogFileName.replace(":","_")
+
+    fobj = open(LogFileName,"w")
+
+    fobj.write(Border+"\n")
+    fobj.write(" Marvellous Automation Script \n")
+    fobj.write(Border+"\n\n")
+
+    ResultData = FindDuplicate(DirectoryName)
+
+    if ResultData is None:
+      fobj.close()
+      return
+
+    MyDict, TotalFiles = ResultData
 
     Result = list(filter(lambda x : len(x) > 1, MyDict.values()))
 
     Count = 0
     TotalDeleted = 0
+    TotalDuplicate = 0
+
+    fobj.write("Duplicate files:\n")
 
     for value in Result:
+        TotalDuplicate = TotalDuplicate + len(value) - 1
         for subvalue in value:
+            fobj.write(subvalue +"\n")
+
             Count = Count + 1
             if(Count > 1):
                 os.remove(subvalue)
                 TotalDeleted = TotalDeleted + 1
         Count = 0
 
-    print("Total deleted files : ",TotalDeleted)
+    end_time = time.perf_counter()
 
+    execution_time = end_time - start_time    
+
+    fobj.write(f"Total files scanned : {TotalFiles}\n")
+    fobj.write(f"Total duplicate files : {TotalDuplicate}\n")
+    fobj.write(f"Time required for execution:{execution_time}\n")
+
+    fobj.write(Border+"\n")
+    fobj.write("Log file gets created at : "+timestamp)
+    fobj.write("\n"+Border+"\n")
+
+    fobj.close()
+
+    # Step 1 : Create Email object
+    msg = EmailMessage()
+
+    # Step 2 : Set mail headers
+    msg["From"] = "nikhilaghav25@gmail.com"
+    msg["To"]   = "nikhilaaghav@gmail.com"
+    msg["Subject"] = "Test mail from python script"
+
+    # Step 3 : Get Gmail App Password
+    # Description : Retrieves the password securely
+    #              from an environment variable
+    app_pwd = os.getenv("GMAIL_APP_PASSWORD")
+
+    if not app_pwd:
+     raise ValueError("GMAIL_APP_PASSWORD is not set")
+
+    # Step 4 : Add mail body 
+    body = """
+    This is a test email
+    """
+    msg.set_content(body)
+
+    # Step 5 : Read Log File
+    fobj = open(LogFileName,"rb")
+    file_data = fobj.read()
+
+    # Step 6 : Attach Log File
+    msg.add_attachment(
+            file_data,   
+            maintype='text',
+            subtype='plain',
+            filename=LogFileName)
+    
+    fobj.close()
+
+    # Step 4 : Create SMTP SSL connection manually
+    smtp = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+    
+    # Step 5 : Login using Gmail + App password
+    smtp.login("nikhilaghav25@gmail.com", app_pwd)
+    
+    # Step 6 : Send the email
+    smtp.send_message(msg)
+    
+    # Step 7 : Close connection manually
+    smtp.quit()
+   
 # ------------------------------------------------- 
 # Function : main # Description : Driver function of the program 
 # -------------------------------------------------
     
 def main():
-    DeleteDuplicate("Test")
+    schedule.every(1).minute.do(DeleteDuplicate,"Test") 
+                
+    while True:
+            schedule.run_pending()
+            time.sleep(1)
 
 # ------------------------------------------------- 
 # Program Entry Point 
