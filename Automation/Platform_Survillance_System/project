@@ -26,17 +26,17 @@ def ProcessScan():
         # Step 2 : Iterate through all running processes
         for proc in psutil.process_iter():
 
-        # Step 3 : Fetch basic information about each process
-        info = proc.as_dict(attrs=["pid", "name", "username", "status"])
-
-        # Step 4 : Fetch CPU usage of the process
-        info["cpu_percent"] = proc.cpu_percent(None)
-
-        # Step 5 : Fetch RAM usage of the process
-        info["memory_percent"] = proc.memory_percent()
-
-        # Step 6 : Add process information into the list
-        listprocess.append(info)
+                # Step 3 : Fetch basic information about each process
+                info = proc.as_dict(attrs=["pid", "name", "username", "status"])
+        
+                # Step 4 : Fetch CPU usage of the process
+                info["cpu_percent"] = proc.cpu_percent(None)
+        
+                # Step 5 : Fetch RAM usage of the process
+                info["memory_percent"] = proc.memory_percent()
+        
+                # Step 6 : Add process information into the list
+                listprocess.append(info)
 
         # Step 7 : Return the complete process information
         return listprocess
