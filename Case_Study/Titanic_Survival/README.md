@@ -1,3 +1,5 @@
+🔗 **Live Demo:** [Titanic Survival Prediction App](https://titanic-survival-nikhil.streamlit.app)
+
 📌 Project Overview
 
 This project uses Machine Learning to predict whether a passenger survived the Titanic disaster.
