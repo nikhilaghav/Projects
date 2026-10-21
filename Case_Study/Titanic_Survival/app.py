@@ -1,11 +1,14 @@
+import os
 import streamlit as st
 import pandas as pd
 import joblib 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 st.title("Titanic survival case study")
 st.write("Machine Learning application dashboad")
 
-model = joblib.load("MarvellousTitanic.pkl")
+model = joblib.load(os.path.join(BASE_DIR, "MarvellousTitanic.pkl"))
 
 st.subheader("Enter Passenger details:")
 
