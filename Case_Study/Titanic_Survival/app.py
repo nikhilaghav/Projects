@@ -40,5 +40,3 @@ if st.button("Predict "):
         st.error("passenger did not survived")
 
 st.divider()
-
-
