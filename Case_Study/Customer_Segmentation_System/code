@@ -4,48 +4,114 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 
-def main():
-    ########################################
-    # Step 1 : Load the data
-    ########################################
-    
-    df = pd.read_csv("Mall_Customers.csv")
 
-    print("Dataset loaded with values")
+# Step 1 : Load Data
+
+#-----------------------------------------------------
+#   Function Name : LoadData
+#   Description :   Load the data from CSV
+#   Input :         Name of CSV file
+#   Output :        Data Frame
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def LoadData(filename):
+
+    df = pd.read_csv(filename)
+
+    print("Dataset loaded successfully")
+
+    print("First few records : ")
     print(df.head())
 
-    print("Missing values : ")
-    print(df.isnull().sum())  
+    return df
 
-    ########################################
-    # Step 2 : Feature selection
-    ########################################
-    
+
+# Step 2 : Check Missing Values
+
+#-----------------------------------------------------
+#   Function Name : CheckMissingValues
+#   Description :   Check missing values in dataset
+#   Input :         Data Frame
+#   Output :        None
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def CheckMissingValues(df):
+
+    print("Missing values : ")
+    print(df.isnull().sum())
+
+    print("Missing values checking completed")
+
+
+# Step 3 : Feature Selection
+
+#-----------------------------------------------------
+#   Function Name : SelectFeatures
+#   Description :   Select features for clustering
+#   Input :         Data Frame
+#   Output :        Selected Features
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def SelectFeatures(df):
+
     X = df[["AnnualIncome", "SpendingScore"]]
 
-    print("Selected fetures : ")
+    print("Selected features : ")
     print(X.head())
 
-    ########################################
-    # Step 3 : Scale the data
-    ########################################
-      
-    scalar = StandardScaler()
+    return X
 
-    X_scaled = scalar.fit_transform(X)
+
+# Step 4 : Scale Features
+
+#-----------------------------------------------------
+#   Function Name : ScaleFeatures
+#   Description :   It performs feature scaling
+#   Input :         Selected Features
+#   Output :        Scaled Features
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def ScaleFeatures(X):
+
+    scaler = StandardScaler()
+
+    X_scaled = scaler.fit_transform(X)
+
+    print("Feature scaling completed successfully")
 
     print("Scaled data : ")
     print(X_scaled[:5])
 
-    ########################################
-    # Step 4 : Elbow method
-    ########################################
-    
+    return X_scaled
+
+
+# Step 5 : Calculate WCSS
+
+#-----------------------------------------------------
+#   Function Name : CalculateWCSS
+#   Description :   Calculate WCSS using Elbow Method
+#   Input :         Scaled Features
+#   Output :        List of WCSS values
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def CalculateWCSS(X_scaled):
+
     WCSS = []
 
-    for k in range(1,11):
+    for k in range(1, 11):
+
         model = KMeans(
-            n_clusters = k,
+            n_clusters=k,
             random_state=42,
             n_init=10
         )
@@ -55,36 +121,142 @@ def main():
         WCSS.append(model.inertia_)
 
     print("Values of WCSS : ")
+
     for i in range(len(WCSS)):
         print(f"{i+1} : {WCSS[i]}")
 
-    ########################################
-    # Step 5 : Visualisation
-    ########################################
-    
-    plt.plot(range(1,11),WCSS, marker = "o")
+    return WCSS
+
+
+# Step 6 : Visualize Elbow Method
+
+#-----------------------------------------------------
+#   Function Name : VisualizeElbow
+#   Description :   Visualize WCSS using Elbow Method
+#   Input :         List of WCSS values
+#   Output :        Elbow Method Graph
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def VisualizeElbow(WCSS):
+
+    plt.plot(range(1, 11), WCSS, marker="o")
+
     plt.xlabel("Number of clusters : k")
+
     plt.ylabel("WCSS")
-    plt.title("Marvellous Elbow method")
+
+    plt.title("K-Means Elbow Method")
+
     plt.grid(True)
+
     plt.show()
 
-    ########################################
-    # Step 6 : Final model
-    ########################################
-    
+
+# Step 7 : Create K-Means Model
+
+#-----------------------------------------------------
+#   Function Name : CreateModel
+#   Description :   Create K-Means Clustering model
+#   Input :         None
+#   Output :        K-Means model
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def CreateModel():
+
     model = KMeans(
-                n_clusters = 4,
-                random_state=42,
-                n_init=10
-            )
+        n_clusters=4,
+        random_state=42,
+        n_init=10
+    )
+
+    print("K-Means model created successfully")
+
+    return model
+
+
+# Step 8 : Train Model
+
+#-----------------------------------------------------
+#   Function Name : TrainModel
+#   Description :   Train K-Means model and assign clusters
+#   Input :         Model and Scaled Features
+#   Output :        Trained Model and Cluster Labels
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def TrainModel(model, X_scaled):
 
     clusters = model.fit_predict(X_scaled)
+
+    print("K-Means model trained successfully")
+
+    return model, clusters
+
+
+# Step 9 : Display Clusters
+
+#-----------------------------------------------------
+#   Function Name : DisplayClusters
+#   Description :   Assign and display customer clusters
+#   Input :         Data Frame and Cluster Labels
+#   Output :        Updated Data Frame
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def DisplayClusters(df, clusters):
 
     df["Cluster"] = clusters
 
     print("Dataset with clusters : ")
     print(df.head(100))
+
+    return df
+
+
+#-----------------------------------------------------
+#   Function Name : main
+#   Description :   Entry point function
+#   Input :         None
+#   Output :        None
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def main():
+
+    # Step 1 : Load Data
+    df = LoadData("Mall_Customers.csv")
+
+    # Step 2 : Check Missing Values
+    CheckMissingValues(df)
+
+    # Step 3 : Feature Selection
+    X = SelectFeatures(df)
+
+    # Step 4 : Scale Features
+    X_scaled = ScaleFeatures(X)
+
+    # Step 5 : Calculate WCSS
+    WCSS = CalculateWCSS(X_scaled)
+
+    # Step 6 : Visualize Elbow Method
+    VisualizeElbow(WCSS)
+
+    # Step 7 : Create K-Means Model
+    model = CreateModel()
+
+    # Step 8 : Train Model
+    model, clusters = TrainModel(model, X_scaled)
+
+    # Step 9 : Display Clusters
+    df = DisplayClusters(df, clusters)
+
 
 if __name__ == "__main__":
     main()
