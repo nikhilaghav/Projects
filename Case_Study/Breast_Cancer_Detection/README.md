@@ -1,4 +1,4 @@
-🔗 **Live Demo:** [Titanic Survival Prediction App](https://breastcancer-nikhil.streamlit.app/)
+🔗 **Live Demo:** [Breast Cancer Prediction App](https://breastcancer-nikhil.streamlit.app/)
 
 
 📌 Project Overview
