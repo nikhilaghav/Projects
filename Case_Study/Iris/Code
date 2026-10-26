@@ -1,10 +1,7 @@
 import pandas as pd
-
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 from sklearn.model_selection import train_test_split
-
 from sklearn.tree import DecisionTreeClassifier
 
 from sklearn.metrics import (
@@ -13,170 +10,299 @@ from sklearn.metrics import (
     classification_report
 )
 
-Border = "-"*30
 
-########################################
-# Step 1 : Load the dataset
-########################################
+# Step 1 : Load Data
 
-print(Border)
-print("Step 1 : Load the dataset")
-print(Border)
+#-----------------------------------------------------
+#   Function Name : LoadData
+#   Description :   Load the data from CSV
+#   Input :         Name of CSV file
+#   Output :        Data Frame
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
 
-DataPath = "iris.csv"
+def LoadData(filename):
 
-df = pd.read_csv(DataPath)
+    df = pd.read_csv(filename)
 
-print("Dataset loaded succefully")
-print("Initial entries from dataset are. : ")
-print(df.head())
+    print("Dataset loaded successfully")
 
-########################################
-# Step 2 : Data Analysis (EDA)
-########################################
+    print("Initial entries from dataset : ")
+    print(df.head())
 
-print(Border)
-print("Step 2 : Data Analysis (EDA)")
-print(Border)
+    return df
 
-print("Shape of dataset : ",df.shape)
 
-print("Column names : ",list(df.columns))
+# Step 2 : Exploratory Data Analysis
 
-print("Mising values per column : ")
-print(df.isnull().sum())
+#-----------------------------------------------------
+#   Function Name : AnalyzeData
+#   Description :   Perform Exploratory Data Analysis
+#   Input :         Data Frame
+#   Output :        None
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
 
-print("Class distribution (species count)")
-print(df["species"].value_counts())
+def AnalyzeData(df):
 
-print("Statistical report of dataset : ")
-print(df.describe())
+    print("Shape of dataset : ", df.shape)
 
-########################################
-# Step 3 : Decide Independent & Dependent variables
-########################################
+    print("Column names : ")
+    print(list(df.columns))
 
-print(Border)
-print("Step 3 : Decide Independent & Dependent variables")
-print(Border)
+    print("Missing values per column : ")
+    print(df.isnull().sum())
 
-# X : Independent Varibale / Fetures
-# Y : Dependenet VAriable / Labels
+    print("Class distribution (Species count) : ")
+    print(df["species"].value_counts())
 
-feture_cols = [
-    "sepal length (cm)",
-    "sepal width (cm)",
-    "petal length (cm)",
-    "petal width (cm)"
+    print("Statistical report of dataset : ")
+    print(df.describe())
+
+    print("Exploratory Data Analysis completed successfully")
+
+
+# Step 3 : Separate Features and Labels
+
+#-----------------------------------------------------
+#   Function Name : SeparateFeatures
+#   Description :   Separate independent and dependent
+#                   variables
+#   Input :         Data Frame
+#   Output :        Features and Labels
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def SeparateFeatures(df):
+
+    feature_cols = [
+        "sepal length (cm)",
+        "sepal width (cm)",
+        "petal length (cm)",
+        "petal width (cm)"
     ]
 
-X = df[feture_cols]
-Y = df["species"]
+    X = df[feature_cols]
 
-print("X Shape : ",X.shape)
-print("Y Shape : ",Y.shape)
+    Y = df["species"]
 
-########################################
-# Step 4 : Visualisation of Dataset
-########################################
+    print("Feature and label separation completed")
 
-print(Border)
-print("Step 4 : Visualisation of Dataset")
-print(Border)
+    print("X Shape : ", X.shape)
 
-# Scatter plot
-plt.figure(figsize=(7,5))
+    print("Y Shape : ", Y.shape)
 
-for sp in df["species"].unique():
-    temp = df[df["species"] == sp]
-    plt.scatter(temp["petal length (cm)"], temp["petal width (cm)"],label = sp)
+    return X, Y
 
-plt.title("Marvellous Iris Case Study")
 
-plt.xlabel("petal length (cm)")
-plt.ylabel("petal width (cm)")
+# Step 4 : Visualize Dataset
 
-plt.legend()
-plt.grid()
-plt.show()
+#-----------------------------------------------------
+#   Function Name : VisualizeData
+#   Description :   Visualize Iris dataset using
+#                   Scatter Plot
+#   Input :         Data Frame
+#   Output :        Scatter Plot
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
 
-########################################
-# Step 5 : Split the dataset for training and testing
-########################################
+def VisualizeData(df):
 
-print(Border)
-print("Step 5 : Split the dataset for training and testing")
-print(Border)
+    plt.figure(figsize=(7, 5))
 
-X_train, X_test, Y_train, Y_test = train_test_split(X,Y, test_size=0.5, random_state=42)
+    for sp in df["species"].unique():
 
-print("Dataset splitting activity done")
+        temp = df[df["species"] == sp]
 
-print("X : ",X.shape)       # (150,4)
-print("Y : ",Y.shape)       # (150,)
+        plt.scatter(
+            temp["petal length (cm)"],
+            temp["petal width (cm)"],
+            label=sp
+        )
 
-print("X_train : ",X_train.shape)   # (75,4)
-print("X_test : ",X_test.shape)     # (75,4)
+    plt.title("Iris Flower Classification")
 
-print("Y_train : ",Y_train.shape)   #(75,)
-print("Y_test : ",Y_test.shape)     #(75,)
+    plt.xlabel("Petal Length (cm)")
 
-########################################
-# Step 6 : Build the model
-########################################
+    plt.ylabel("Petal Width (cm)")
 
-print(Border)
-print("Step 6 : Build the model")
-print(Border)
+    plt.legend()
 
-model = DecisionTreeClassifier(max_depth=5)
+    plt.grid(True)
 
-print("Model gets created succesfully")
+    plt.show()
 
-########################################
-# Step 7 : Train the model
-########################################
 
-print(Border)
-print("Step 7 : Train the model")
-print(Border)
+# Step 5 : Split Data
 
-model.fit(X_train,Y_train)
+#-----------------------------------------------------
+#   Function Name : SplitData
+#   Description :   It performs dataset splitting
+#   Input :         Features and Labels
+#   Output :        4 subsets for training and testing
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
 
-print("Model trained succesfully")
+def SplitData(X, Y):
 
-########################################
-# Step 8 : Test the model
-########################################
+    X_train, X_test, Y_train, Y_test = train_test_split(
+        X,
+        Y,
+        test_size=0.5,
+        random_state=42
+    )
 
-print(Border)
-print("Step 8 : Test the model")
-print(Border)
+    print("Dataset splitting completed successfully")
 
-Y_pred = model.predict(X_test)
+    print("X : ", X.shape)
+    print("Y : ", Y.shape)
 
-print("Model testing done")
+    print("X_train : ", X_train.shape)
+    print("X_test : ", X_test.shape)
 
-print("Expected answers : ")
-print(Y_test)
+    print("Y_train : ", Y_train.shape)
+    print("Y_test : ", Y_test.shape)
 
-print("Predicted answers : ")
-print(Y_pred)
+    return X_train, X_test, Y_train, Y_test
 
-########################################
-# Step 9 : Evaluate the mdoel performance
-########################################
 
-print(Border)
-print("Step 9 : Evaluate the mdoel performance")
-print(Border)
+# Step 6 : Create Model
 
-accuracy = accuracy_score(Y_test, Y_pred)
-print("Accuracy of model is : ",accuracy*100)
+#-----------------------------------------------------
+#   Function Name : CreateModel
+#   Description :   Create Decision Tree Classifier
+#   Input :         None
+#   Output :        Decision Tree Classifier model
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
 
-print("Confustion matrix")
-cm = confusion_matrix(Y_test, Y_pred)
-print(cm)
+def CreateModel():
 
-print("Classification Report")
-print(classification_report(Y_test, Y_pred))
+    model = DecisionTreeClassifier(max_depth=5)
+
+    print("Decision Tree Classifier created successfully")
+
+    return model
+
+
+# Step 7 : Train Model
+
+#-----------------------------------------------------
+#   Function Name : TrainModel
+#   Description :   It performs model training
+#   Input :         Model, training features and labels
+#   Output :        Trained model
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def TrainModel(model, X_train, Y_train):
+
+    model = model.fit(X_train, Y_train)
+
+    print("Model trained successfully")
+
+    return model
+
+
+# Step 8 : Test Model
+
+#-----------------------------------------------------
+#   Function Name : TestModel
+#   Description :   It performs model testing
+#   Input :         Model and testing features
+#   Output :        Predicted Labels
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def TestModel(model, X_test, Y_test):
+
+    Y_pred = model.predict(X_test)
+
+    print("Model testing completed successfully")
+
+    print("Expected answers : ")
+    print(Y_test)
+
+    print("Predicted answers : ")
+    print(Y_pred)
+
+    return Y_pred
+
+
+# Step 9 : Evaluate Model
+
+#-----------------------------------------------------
+#   Function Name : EvaluateModel
+#   Description :   Evaluate model performance
+#   Input :         Actual and Predicted Labels
+#   Output :        None
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def EvaluateModel(Y_test, Y_pred):
+
+    accuracy = accuracy_score(Y_test, Y_pred)
+
+    print("Accuracy of model is : ", accuracy * 100)
+
+    print("Confusion Matrix : ")
+
+    cm = confusion_matrix(Y_test, Y_pred)
+
+    print(cm)
+
+    print("Classification Report : ")
+
+    print(classification_report(Y_test, Y_pred))
+
+
+#-----------------------------------------------------
+#   Function Name : main
+#   Description :   Entry point function
+#   Input :         None
+#   Output :        None
+#   Author :        Nikhil Aba Aghav
+#   Date :          27/10/2026
+#-----------------------------------------------------
+
+def main():
+
+    # Step 1 : Load Data
+    df = LoadData("iris.csv")
+
+    # Step 2 : Exploratory Data Analysis
+    AnalyzeData(df)
+
+    # Step 3 : Separate Features and Labels
+    X, Y = SeparateFeatures(df)
+
+    # Step 4 : Visualize Dataset
+    VisualizeData(df)
+
+    # Step 5 : Split Data
+    X_train, X_test, Y_train, Y_test = SplitData(X, Y)
+
+    # Step 6 : Create Model
+    model = CreateModel()
+
+    # Step 7 : Train Model
+    model = TrainModel(model, X_train, Y_train)
+
+    # Step 8 : Test Model
+    Y_pred = TestModel(model, X_test, Y_test)
+
+    # Step 9 : Evaluate Model
+    EvaluateModel(Y_test, Y_pred)
+
+
+if __name__ == "__main__":
+    main()
