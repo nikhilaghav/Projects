@@ -1,4 +1,4 @@
-🔗 **Live Demo:** [Titanic Survival Prediction App](https://house-price-prediction-nikhil.streamlit.app/)
+🔗 **Live Demo:**(https://house-price-prediction-nikhil.streamlit.app/)
 
 📌 Project Overview
 
