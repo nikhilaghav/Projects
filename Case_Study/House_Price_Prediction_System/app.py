@@ -23,7 +23,11 @@ st.write("Predict California housing prices using Bagging Regressor")
 
 # Step 3 : Load Preserved Model
 
-model = joblib.load("CaliforniaHousing.pkl")
+from pathlib import Path
+
+MODEL_PATH = Path(__file__).resolve().parent / "CaliforniaHousing.pkl"
+
+model = joblib.load(MODEL_PATH)
 
 
 # Step 4 : Accept User Input
