@@ -1,4 +1,4 @@
-🔗 **Live Demo:** [Breast Cancer Prediction App](https://house-price-prediction-nikhil.streamlit.app/)
+🔗 **Live Demo:** [House Price Prediction App](https://house-price-prediction-nikhil.streamlit.app/)
 
 📌 Project Overview
 
