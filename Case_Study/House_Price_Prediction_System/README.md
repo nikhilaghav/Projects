@@ -1,3 +1,5 @@
+🔗 **Live Demo:** [Titanic Survival Prediction App](https://house-price-prediction-nikhil.streamlit.app/)
+
 📌 Project Overview
 
 This project predicts California housing prices using Bagging Ensemble Learning with a Decision Tree Regressor as the base model.
