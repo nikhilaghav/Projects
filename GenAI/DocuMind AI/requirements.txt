@@ -1,5 +1,0 @@
-streamlit
-pypdf
-chromadb
-sentence-transformers
-requests
