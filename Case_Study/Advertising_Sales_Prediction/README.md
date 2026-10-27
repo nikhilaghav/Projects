@@ -1,3 +1,6 @@
+🔗 **Live Demo:** [Advertising sales Prediction App](https://projects-advertising.streamlit.app/)
+
+
 📌 Project Overview
 
 This project predicts product sales based on advertising expenditure across three different advertising channels:
