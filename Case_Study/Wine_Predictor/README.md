@@ -1,3 +1,5 @@
+🔗 **Live Demo:** [Wine Prediction App](https://projects-wineprediction.streamlit.app/)
+
 *Project Overview
 
 This project demonstrates a Machine Learning classification model using the K-Nearest Neighbors (KNN) algorithm.
