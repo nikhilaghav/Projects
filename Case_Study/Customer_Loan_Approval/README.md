@@ -1,3 +1,5 @@
+🔗 **Live Demo:** [ customer loan approval App](https://projects-customer-loanapproval-nikhil.streamlit.app/)
+
 📌 Project Overview
 
 This project predicts whether a customer's loan application will be approved or rejected using Machine Learning classification algorithms.
