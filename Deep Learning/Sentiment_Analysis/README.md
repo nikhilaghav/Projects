@@ -55,7 +55,9 @@ The model considers the 10,000 most frequent words from the dataset.
 VOCAB_SIZE = 10000
 
 ################################################################
+
  Complete project flow
+ 
 #################################################################
 
 1. Load IMDB Dataset
