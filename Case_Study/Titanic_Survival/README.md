@@ -30,19 +30,33 @@ The main objective of this project is to build a Binary Classification Machine L
 The project demonstrates an end-to-end Machine Learning workflow:
 
 Dataset
+
    ↓
+
 Load Data
+
    ↓
+
 Data Preprocessing
+
    ↓
+
 Feature / Target Separation
+
    ↓
+
 Train-Test Split
+
    ↓
+
 Model Training
+
    ↓
+
 Model Prediction
+
    ↓
+
 Model Evaluation
    ↓
 Save Trained Model
