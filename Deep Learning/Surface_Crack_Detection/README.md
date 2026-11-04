@@ -9,3 +9,59 @@ using TensorFlow and Keras with visualization of prediction results and performa
 Tech Stack:
 
 Python, TensorFlow, Keras, OpenCV, NumPy, Matplotlib, Scikit-learn
+
+############################################################
+
+Complete Project Flow
+
+########################################################
+
+Original Dataset
+↓
+
+Positive / Negative Images
+
+↓
+Check Dataset
+↓
+Split Dataset
+↓
+70% Training
+15% Validation
+15% Testing
+↓
+Image Preprocessing
+↓
+Data Augmentation
+↓
+CNN Architecture
+↓
+Convolution
+↓
+Batch Normalization
+↓
+Max Pooling
+↓
+Feature Extraction
+↓
+Flatten
+↓
+Dense Neural Network
+↓
+Sigmoid Output
+↓
+Compile
+↓
+Train
+↓
+Validate
+↓
+Evaluate on Test Data
+↓
+Confusion Matrix
+↓
+Classification Report
+↓
+Save Model
+↓
+Predict New Image
