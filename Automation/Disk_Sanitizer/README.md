@@ -1,8 +1,8 @@
-# Duplicate File Removal Automation
+# Disk Sanitizer
 
 ## Overview
 
-Duplicate File Removal Automation is a Python-based automation project designed to identify and delete duplicate files from a specified directory.
+Disk Sanitizer is a Python-based automation project designed to identify and delete duplicate files from a specified directory.
 
 The application uses the **MD5 hashing algorithm** to compare file contents and identify duplicates. It automatically removes duplicate files while retaining one copy of each unique file.
 
