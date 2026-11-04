@@ -24,21 +24,37 @@ The main objective of this project is to build a classification model that predi
 The project demonstrates the following Machine Learning workflow:
 
 Dataset
+
    ↓
+
 Load Dataset
+
    ↓
+
 Separate Features and Labels
+
    ↓
+
 Train-Test Split
+
    ↓
+
 Feature Scaling
+
    ↓
+
 Create Individual Models
+
    ↓
+
 Create Voting Classifier
+
    ↓
+
 Train Model
+
    ↓
+
 Make Predictions
    ↓
 Evaluate Model
