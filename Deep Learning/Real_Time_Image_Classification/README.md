@@ -29,7 +29,7 @@ The webcam continuously captures images, preprocesses them according to the Mobi
   Python
     
   OpenCV
-    
+
   NumPy
 
   TensorFlow / Keras
@@ -37,3 +37,36 @@ The webcam continuously captures images, preprocesses them according to the Mobi
   MobileNetV2
   
   ImageNet
+
+
+#######################################################
+
+project flow
+
+#######################################################
+
+
+1-Load MobileNetV2
+
+  Pretrained on ImageNet dataset
+
+2-Open Webcam
+
+  Capture live video frames using OpenCV
+
+3-Image Preprocessing
+
+  BGR → RGB → Resize → Normalize
+
+4-MobileNetV2 Prediction
+
+  Predict the object category
+
+5-Decode Prediction
+
+  Convert prediction into a readable label
+
+6-Display Result
+
+  Show object name and confidence on webcam  
+ 
