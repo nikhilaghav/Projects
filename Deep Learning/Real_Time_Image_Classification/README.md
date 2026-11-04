@@ -46,27 +46,32 @@ project flow
 #######################################################
 
 
-1-Load MobileNetV2
-
+  Load MobileNetV2
+        
   Pretrained on ImageNet dataset
-
-2-Open Webcam
+        |
+        v
+  Open Webcam
 
   Capture live video frames using OpenCV
-
-3-Image Preprocessing
+        |
+        v
+  Image Preprocessing
 
   BGR → RGB → Resize → Normalize
-
-4-MobileNetV2 Prediction
+        |
+        v
+  MobileNetV2 Prediction
 
   Predict the object category
-
-5-Decode Prediction
+        |
+        v
+  Decode Prediction
 
   Convert prediction into a readable label
-
-6-Display Result
+        |
+        v
+  Display Result
 
   Show object name and confidence on webcam  
  
